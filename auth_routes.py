@@ -42,7 +42,7 @@ def validate_token():
     except:
         return make_response(jsonify({"message": 'token is invalid'}),401)
     if not user:
-      return make_response(jsonify({"message": 'token is invalid'}), 401)
+      return make_response(jsonify({"message": 'user not found'}), 401)
     return jsonify({"message": 'validation success'})
 
 @app.route('/register', methods = ['POST'])
@@ -73,7 +73,7 @@ def login_user():
         auth = request.get_json()['authorization']
         # auth = request.get_json()['authorization']
     if not auth or not auth.username or not auth.password:
-        return make_response(jsonify({ 'message': 'Invalid username or password'}),  401)
+        return make_response(jsonify({ 'message': 'Missing authorization credentials'}),  401)
     print("auth.username is: " + auth.username)
     user = db.users.find_one_or_404({ "email" : auth.username})
     print(user)
@@ -85,14 +85,3 @@ def login_user():
             os.environ.get("PASSWORD_SALT"), "HS256")
         return jsonify({'jwt_token': jwt_token})
     return make_response(jsonify({ 'message': 'Invalid username or password'}),  401)
-    
-
-
-@app.route("/getGag", methods = ['GET'])
-def hello_bobert():
-    #gag = db.users.find_one({"email": "gag"})
-    #print ("Gag is: " + db.users.find_one({"email": "gag"})["_id"])
-    return jsonify({"message": str(db.users.find_one({"email": "gag"})["_id"])}) 
-
-
-

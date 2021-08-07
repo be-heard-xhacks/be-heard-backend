@@ -56,16 +56,20 @@ def registerUser():
     user_pass=request_data.get("password")
     user_email = request_data.get("email")
     user_interests = request_data.get("interests")
+    user_firstName= request_data.get("firstName")
+    user_lastName = request_data.get("lastName")
 
     prev_user = db.users.find_one( {"email": user_email})
     if prev_user:
-        return jsonify({"message": "Error, email is taken"})
+        return make_response(jsonify({"message": "Error, email is taken"}), 409)
 
     hashed_password = generate_password_hash(user_pass, method = 'sha256')
     new_user = db.users.insert_one({
         "email": user_email,
         "password" : hashed_password,
-        "interests" : user_interests
+        "interests" : user_interests,
+        "firstName" : user_firstName,
+        "lastName" : user_lastName
     })
     return jsonify({"message" : "User successfully registered" })
 

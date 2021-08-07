@@ -1,12 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+import os
 
-from dotenv import dotenv_values
-config = dotenv_values('.env')
+from dotenv import load_dotenv
+# load_dotenv()
 
 app = Flask(__name__)
-app.config['MONGO_URI']=config['URI']
+app.config['MONGO_URI']=os.environ['URI']
 mongo = PyMongo(app)
 db = mongo.db
 

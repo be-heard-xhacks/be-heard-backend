@@ -4,4 +4,10 @@ dev-env/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+<<<<<<< HEAD
 .env
+=======
+venv/
+.env
+.vscode/
+>>>>>>> main

@@ -3,9 +3,10 @@ from flask import jsonify, make_response, request
 import requests
 import os
 import json
+from auth_routes import auth_required
   
 @app.route("/getArticles", methods = ["GET"])
-
+@auth_required
 def getArticles():
     request_data = request.args
     if request.is_json:

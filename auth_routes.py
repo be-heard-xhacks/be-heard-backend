@@ -26,6 +26,8 @@ def auth_required(f):
             db.users.find_one_or_404({"_id": uid})
         except:
             return make_response(jsonify({"message": 'token is invalid'}),401)
+
+        print('authenticated')
         return f(uid, *args, **kwargs)
     return decorator
 

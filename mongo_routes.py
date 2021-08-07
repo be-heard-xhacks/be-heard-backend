@@ -39,30 +39,31 @@ def getInterests(uid):
     print(db.users.find_one({"_id": objID}))
     return jsonify({'interests': db.users.find_one({"_id": objID})['interests']})
 
-validParams = ['interests', 'email', 'password']
-@app.route("/update<param>", methods = ["POST"])
+validParams = ['interests', 'email', 'password', 'firstName', 'lastName']
+@app.route("/updateUser", methods = ["POST"])
 @auth_required
-def updateUser(uid, param):
+def updateUser(uid):
     objID = ObjectId(uid)
     if not objID:
       return make_response(jsonify({'message' : 'missing uid'}), 404)
-    param = param.lower()
-    print(param)
-    if param not in validParams:
-      return make_response(jsonify({'message' : 'route not found'}), 404)
     
-    request_data = request.args
-    if request.is_json:
-        request_data = request.get_json()
-    value = request_data.get("value")
-    # need to rehash the new password
-    if param == 'password':
-      value = generate_password_hash(value, method = 'sha256')
-
+    request_data = request.get_json()
+    updatevals = {}
+    for key in validParams:
+      if key in request_data:
+        updatevals[key] = request_data.get(key)
+  
     user = db.users.find_one({"_id": objID})
     if not user:
       return make_response(jsonify({'message' : 'no user with that id'}), 404)
-    query = {"_id": objID}
-    newval = {"$set": {param : value}}
-    db.users.update_one(query, newval)
-    return jsonify({param: db.users.find_one({"_id": objID})[param]})
+
+    for param in updatevals:
+      # need to rehash the new password
+      value = updatevals[param]
+      if param == 'password':
+        value = generate_password_hash(value, method = 'sha256')
+      query = {"_id": objID}
+      newval = {"$set": {param : value}}
+      db.users.update_one(query, newval)
+    
+    return jsonify({'updated user': str(db.users.find_one({"_id": objID}))})

@@ -3,7 +3,7 @@ from flask_pymongo import PyMongo
 from dotenv import load_dotenv
 import os
 # REMOVE BEFORE PUSHING!!!
-load_dotenv()
+# load_dotenv()
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.environ['URI']

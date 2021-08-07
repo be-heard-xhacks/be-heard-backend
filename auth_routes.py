@@ -11,6 +11,7 @@ import jwt
 import datetime
 # function to wrap around our db calls around
 
+# TODO: USE IS_JSON and GETJSON
 def auth_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
@@ -65,6 +66,9 @@ def registerUser():
 @app.route('/login', methods = ['POST'])
 def login_user():
     auth = request.authorization
+    if request.is_json:
+        print(request.get_json)
+        auth = request.get_json()['authorization']
     if not auth or not auth.username or not auth.password:
         return make_response("Must login", 401, {'Authentication': 'login required'})
     print("auth.username is: " + auth.username)

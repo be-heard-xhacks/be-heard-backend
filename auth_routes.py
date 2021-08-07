@@ -33,9 +33,12 @@ def auth_required(f):
 @app.route('/validateToken', methods = ['POST'])
 def validate_token():
     auth_token = request.headers['access-token']
-    jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
-    uid = ObjectId(jwt_data['_id'])
-    user = db.users.find_one({"_id": uid})
+    try: 
+        jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
+        uid = ObjectId(jwt_data['_id'])
+        user = db.users.find_one({"_id": uid})
+    except:
+        return make_response(jsonify({"message": 'token is invalid'}),401)
     if not user:
       return make_response(jsonify({"message": 'token is invalid'}), 401)
     return jsonify({"message": 'validation success'})

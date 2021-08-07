@@ -1,9 +1,9 @@
-from datetime import date
+# from datetime import date
 import os
 import datetime
-from posix import environ
+# from posix import environ
 from route_config import *
-from flask import Flask, jsonify, make_response, request
+from flask import jsonify, make_response, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from bson.objectid import ObjectId
@@ -30,10 +30,13 @@ def auth_required(f):
 
 # print("Password salt is: " +os.environ.get("PASSWORD_SALT") )
 
-# def validate_token():
-#     jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
-#     uid = ObjectId(jwt_data['_id'])
-#     user = db.users.find_one_or_404({"_id": uid})
+@app.route('/validateToken', methods = ['POST'])
+def validate_token():
+    auth_token = request.headers['access-token']
+    jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
+    uid = ObjectId(jwt_data['_id'])
+    db.users.find_one_or_404({"_id": uid})
+    return uid
 
 @app.route('/register', methods = ['POST'])
 def registerUser():

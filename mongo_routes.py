@@ -51,7 +51,10 @@ def updateUser(uid, param):
     if param not in validParams:
       return make_response(jsonify({'message' : 'route not found'}), 404)
     
-    value = request.args.get("value")
+    request_data = request.args
+    if request.is_json:
+        request_data = request.get_json()
+    value = request_data.get("value")
     # need to rehash the new password
     if param == 'password':
       value = generate_password_hash(value, method = 'sha256')

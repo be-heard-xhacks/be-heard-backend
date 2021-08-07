@@ -46,6 +46,7 @@ def getArticles(uid):
             article_info['link'] = article['url']
             article_info['summary'] = article['description']
             article_info['time'] = article['datePublished']
+            article_info['id'] = article['id']
             article_images = article['image']
             if article_images:
                 article_info['img'] = article_images['url']

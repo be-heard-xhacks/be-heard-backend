@@ -72,7 +72,7 @@ def login_user():
         auth = request.get_json()['authorization']
         # auth = request.get_json()['authorization']
     if not auth or not auth.username or not auth.password:
-        return make_response("Must login", 401, {'Authentication': 'login required'})
+        return make_response(jsonify({ 'message': 'Invalid username or password'}),  401)
     print("auth.username is: " + auth.username)
     user = db.users.find_one_or_404({ "email" : auth.username})
     print(user)
@@ -83,7 +83,7 @@ def login_user():
             },
             os.environ.get("PASSWORD_SALT"), "HS256")
         return jsonify({'jwt_token': jwt_token})
-    return make_response('Invalid username or password',  401, {'Authentication': '"login required"'})
+    return make_response(jsonify({ 'message': 'Invalid username or password'}),  401)
     
 
 

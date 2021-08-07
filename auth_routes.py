@@ -35,8 +35,10 @@ def validate_token():
     auth_token = request.headers['access-token']
     jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
     uid = ObjectId(jwt_data['_id'])
-    db.users.find_one_or_404({"_id": uid})
-    return uid
+    user = db.users.find_one({"_id": uid})
+    if not user:
+      return make_response(jsonify({"message": 'token is invalid'}), 401)
+    return jsonify({"message": 'validation success'})
 
 @app.route('/register', methods = ['POST'])
 def registerUser():

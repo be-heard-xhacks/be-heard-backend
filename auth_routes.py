@@ -69,7 +69,7 @@ def login_user():
     auth = request.authorization
     if request.is_json:
         print(request.get_json())
-        auth = request.get_json().authorization
+        auth = request.get_json()['authorization']
         # auth = request.get_json()['authorization']
     if not auth or not auth.username or not auth.password:
         return make_response("Must login", 401, {'Authentication': 'login required'})

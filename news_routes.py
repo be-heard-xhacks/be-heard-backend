@@ -39,7 +39,6 @@ def getArticles(uid):
         api_response_data=json.loads(api_response)
         api_response_articles = api_response_data['value']
 
-        parsed_infos = []
         for article in api_response_articles:
             article_info = {}
             article_info['title'] = article['title']
@@ -47,6 +46,7 @@ def getArticles(uid):
             article_info['summary'] = article['description']
             article_info['time'] = article['datePublished']
             article_info['id'] = article['id']
+            article_info['interest'] = request_query
             article_images = article['image']
             if article_images:
                 article_info['img'] = article_images['url']
@@ -63,9 +63,8 @@ def getArticles(uid):
             else:
                 article_info['source'] = ""
                 article_info['sourceIcon'] = ""
-            parsed_infos.append(article_info)
+            parsed_articles.append(article_info)
             
-        parsed_articles.append(parsed_infos)
         
 
     return jsonify({"data" : parsed_articles })

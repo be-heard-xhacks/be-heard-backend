@@ -35,12 +35,13 @@ def auth_required(f):
 def validate_token(): 
     headers= request.headers    
     auth_token = headers.get('access-token')
+    jwt_data = None
     try: 
         jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
         uid = ObjectId(jwt_data['_id'])
         user = db.users.find_one({"_id": uid})
     except:
-        return make_response(jsonify({"message": 'token is invalid'}),401)
+        return make_response(jsonify({"message": f"decode token failed, {jwt_data}"}),401)
     if not user:
       return make_response(jsonify({"message": 'user not found'}), 401)
     return jsonify({"message": 'validation success'})

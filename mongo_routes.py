@@ -2,6 +2,7 @@ from bson.objectid import ObjectId
 from route_config import *
 from auth_routes import auth_required
 from flask import jsonify, make_response
+from werkzeug.security import generate_password_hash
 
 @app.route("/getUsers", methods = ["GET"])
 def getUsers():
@@ -49,12 +50,16 @@ def updateUser(uid, param):
     print(param)
     if param not in validParams:
       return make_response(jsonify({'message' : 'route not found'}), 404)
+    
     value = request.args.get("value")
+    # need to rehash the new password
+    if param == 'password':
+      value = generate_password_hash(value, method = 'sha256')
+
     user = db.users.find_one({"_id": objID})
-    print(user)
     if not user:
       return make_response(jsonify({'message' : 'no user with that id'}), 404)
     query = {"_id": objID}
     newval = {"$set": {param : value}}
-    db.users.update_one(query,newval)
+    db.users.update_one(query, newval)
     return jsonify({param: db.users.find_one({"_id": objID})[param]})

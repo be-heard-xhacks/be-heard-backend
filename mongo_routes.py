@@ -40,6 +40,23 @@ def getInterests(uid):
     return jsonify({'interests': db.users.find_one({"_id": objID})['interests']})
 
 validParams = ['interests', 'email', 'password', 'firstName', 'lastName']
+@app.route("/getUser", methods = ["GET"])
+@auth_required
+def getUser(uid):
+    objID = ObjectId(uid)
+    if not objID:
+      return make_response(jsonify({'message' : 'missing uid'}), 404)
+
+    user = db.users.find_one({"_id": objID})
+
+    profile = {}
+    for key in validParams:
+      profile[key] = ''
+      if key in user:
+        profile[key] = user[key]
+    
+    return jsonify({'profile': profile})
+
 @app.route("/updateUser", methods = ["POST"])
 @auth_required
 def updateUser(uid):

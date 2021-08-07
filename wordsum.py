@@ -6,7 +6,7 @@ from route_config import *
 tokenizer = AutoTokenizer.from_pretrained("sshleifer/distilbart-cnn-12-6")
 model = AutoModelForSeq2SeqLM.from_pretrained("sshleifer/distilbart-cnn-12-6")
 
-@app.route("/testmodel", methods = ["GET"])
+@app.route("/testmodel", methods = ["POST"])
 def summarize():
     article = request.args.get("article")
     inputs = tokenizer([article], return_tensors='pt')

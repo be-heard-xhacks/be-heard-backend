@@ -55,14 +55,21 @@ def getInterestsByID():
     print(db.users.find_one({"_id": ObjectId(objID)}))
     return jsonify({'interests': db.users.find_one({"_id": ObjectId(objID)})['interests']})
 
-@app.route("/updateInterests", methods = ["POST"])
-def updateInterests():
+validParams = ['interests', 'email', 'password']
+@app.route("/update<param>", methods = ["POST"])
+def updateInterests(param):
+    param = param.lower()
+    if param not in validParams:
+      return '404 invalid route'
     objID = request.args.get("_id")
+    value = request.args.get("value")
     if not objID:
       return "error: missing id"
-    print(db.users.find_one({"_id": ObjectId(objID)}))
-    interests = request.args.get("interests")
+    user = db.users.find_one({"_id": ObjectId(objID)})
+    print(user)
+    if not user:
+      return 'no user with that id'
     query = {"_id": ObjectId(objID)}
-    newval = {"$set": {"interests" : interests}}
+    newval = {"$set": {param : value}}
     db.users.update_one(query,newval)
-    return jsonify({'interests': db.users.find_one({"_id": ObjectId(objID)})['interests']})
+    return jsonify({param: db.users.find_one({"_id": ObjectId(objID)})[param]})

@@ -32,10 +32,9 @@ def auth_required(f):
 # print("Password salt is: " +os.environ.get("PASSWORD_SALT") )
 
 @app.route('/validateToken', methods = ['POST'])
-def validate_token():     
-    auth_token = request.headers['access-token']
-    if request.is_json:
-        auth_token = request.get_json().headers['access-token']
+def validate_token(): 
+    headers= request.headers    
+    auth_token = headers.get('access-token')
     try: 
         jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
         uid = ObjectId(jwt_data['_id'])

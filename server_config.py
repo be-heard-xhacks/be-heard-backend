@@ -2,6 +2,7 @@ import os
 from route_config import *
 from auth_routes import *
 from mongo_routes import *
+from news_routes import *
 from wordsum import *
 
 # Run debug mode while testing

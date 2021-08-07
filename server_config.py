@@ -1,5 +1,6 @@
 import os
 from route_config import *
+from mongo_routes import *
 
 # Run debug mode while testing
 # app.debug = True

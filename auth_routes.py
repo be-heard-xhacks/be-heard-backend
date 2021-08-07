@@ -45,8 +45,11 @@ def validate_token():
 
 @app.route('/register', methods = ['POST'])
 def registerUser():
-    user_pass=request.args.get("password")
-    user_email = request.args.get("email")
+    request_data = request.args
+    if request.is_json:
+        request_data = request.get_json()
+    user_pass=request_data.get("password")
+    user_email = request_data.get("email")
 
     prev_user = db.users.find_one( {"email": user_email})
     if prev_user:

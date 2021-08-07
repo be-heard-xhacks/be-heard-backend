@@ -21,7 +21,7 @@ def getArticles(uid):
         payload_params = {
             'q': request_query, 
             'pageNumber' : '1', 
-            'pageSize': '10', 
+            'pageSize': '5', 
             'autoCorrect': 'true',
             'fromPublishedDate': 'null',
             'toPublishedDate': 'null'

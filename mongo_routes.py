@@ -1,6 +1,7 @@
-from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from route_config import *
+from auth_routes import auth_required
+from flask import jsonify, make_response
 
 @app.route("/getUsers", methods = ["GET"])
 def getUsers():
@@ -17,59 +18,43 @@ def getUsers():
     #return the list of users
     print(usersList)
     return jsonify({ "users": usersList })
-    
-@app.route("/addUser", methods = ["POST"])
-def addUser():
-    print(request.args)
-    emailInput = request.args.get("email")
-    password = request.args.get("password")
-    interests = request.args.get("interests")
-    emailNum = db["users"].find({ "email": emailInput}).count()
-    if (emailNum >0):
-        print("Email already exists!")
-        return ("error, email already exists!")
-    newUser = db.users.insert_one({
-        "email" : emailInput,
-        "password" : password,
-        "interests" : interests
-    })
-    
-    print("Adding person of email: " + emailInput + " to db")
-    return "Successfully added email of: " + emailInput
 
-@app.route("/deleteUser", methods = ["POST"])
-def deleteUser():
-    nameInput = request.args.get("name")
-    query = { "name": nameInput}
-    result = db.users.delete_one(query)
-    if (result.deleted_count == 0):
-        return "User did not exist"
-    else: 
-        return ("Deleted user: " + nameInput)
+# @app.route("/deleteUser", methods = ["POST"])
+# def deleteUser():
+#     nameInput = request.args.get("name")
+#     query = { "name": nameInput}
+#     result = db.users.delete_one(query)
+#     if (result.deleted_count == 0):
+#         return "User did not exist"
+#     else: 
+#         return ("Deleted user: " + nameInput)
 
-@app.route("/getInterestsByID", methods = ["GET"])
-def getInterestsByID():
-    objID = request.args.get("_id")
+@app.route("/getInterests", methods = ["GET"])
+@auth_required
+def getInterests(uid):
+    objID = ObjectId(uid)
     if not objID:
-      return "error: missing id"
-    print(db.users.find_one({"_id": ObjectId(objID)}))
-    return jsonify({'interests': db.users.find_one({"_id": ObjectId(objID)})['interests']})
+      return make_response(jsonify({'message' : 'missing uid'}), 404)
+    print(db.users.find_one({"_id": objID}))
+    return jsonify({'interests': db.users.find_one({"_id": objID})['interests']})
 
 validParams = ['interests', 'email', 'password']
 @app.route("/update<param>", methods = ["POST"])
-def updateInterests(param):
-    param = param.lower()
-    if param not in validParams:
-      return '404 invalid route'
-    objID = request.args.get("_id")
-    value = request.args.get("value")
+@auth_required
+def updateUser(uid, param):
+    objID = ObjectId(uid)
     if not objID:
-      return "error: missing id"
-    user = db.users.find_one({"_id": ObjectId(objID)})
+      return make_response(jsonify({'message' : 'missing uid'}), 404)
+    param = param.lower()
+    print(param)
+    if param not in validParams:
+      return make_response(jsonify({'message' : 'route not found'}), 404)
+    value = request.args.get("value")
+    user = db.users.find_one({"_id": objID})
     print(user)
     if not user:
-      return 'no user with that id'
-    query = {"_id": ObjectId(objID)}
+      return make_response(jsonify({'message' : 'no user with that id'}), 404)
+    query = {"_id": objID}
     newval = {"$set": {param : value}}
     db.users.update_one(query,newval)
-    return jsonify({param: db.users.find_one({"_id": ObjectId(objID)})[param]})
+    return jsonify({param: db.users.find_one({"_id": objID})[param]})

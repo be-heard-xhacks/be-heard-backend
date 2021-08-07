@@ -17,19 +17,23 @@ def auth_required(f):
         auth_token = None
         if 'access-token' in request.headers:
             auth_token = request.headers['access-token']
-        
         if not auth_token:
-            return jsonify({'message' : 'no auth token'})
+            return make_response(jsonify({'message' : 'no auth token'}), 401)
         try:
             jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
-            current_user = str(db.users.find_one_or_404({"_id": ObjectId(jwt_data['_id']) }))
+            uid = ObjectId(jwt_data['_id'])
+            db.users.find_one_or_404({"_id": uid})
         except:
-            return jsonify({"message": 'token is invalid'})
-        return f(current_user, *args, **kwargs)
+            return make_response(jsonify({"message": 'token is invalid'}),401)
+        return f(uid, *args, **kwargs)
     return decorator
 
 # print("Password salt is: " +os.environ.get("PASSWORD_SALT") )
 
+# def validate_token():
+#     jwt_data = jwt.decode(auth_token, os.environ.get("PASSWORD_SALT"), algorithms=["HS256"])
+#     uid = ObjectId(jwt_data['_id'])
+#     user = db.users.find_one_or_404({"_id": uid})
 
 @app.route('/register', methods = ['POST'])
 def registerUser():

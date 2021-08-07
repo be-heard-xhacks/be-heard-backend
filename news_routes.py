@@ -1,12 +1,17 @@
+from bson.objectid import ObjectId
 from route_config import *
 from flask import jsonify, make_response, request
 import requests
 import os
 import json
+from auth_routes import auth_required
   
 @app.route("/getArticles", methods = ["GET"])
-
-def getArticles():
+@auth_required
+def getArticles(uid):
+    objID = ObjectId(uid)
+    if not objID:
+        return make_response(jsonify({'message' : 'missing uid'}), 404)
     request_data = request.args
     if request.is_json:
         request_data = request.get_json()

@@ -69,3 +69,71 @@ def getArticles(uid):
         
 
     return jsonify({"data" : parsed_articles })
+
+@app.route("/getTrending", methods=["GET"])
+@auth_required
+def getTrending(uid):
+    objID = ObjectId(uid)
+    if not objID:
+        return make_response(jsonify({'message' : 'missing uid'}), 404)
+    
+    payload_params = {
+        'pageNumber' : '1',
+        'pageSize' : '10',
+        'withThumbnails': 'true',
+        'location' : 'us'
+    }
+
+    payload_headers = {
+        'x-rapidapi-key' : os.environ.get('X_RAPIDAPI_KEY_1'),
+        'x-rapidapi-host' : os.environ.get('X_RAPIDAPI_HOST')
+    }
+
+    api_response = requests.get('https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/search/TrendingNewsAPI',
+        headers= payload_headers,
+        params=payload_params)
+    api_response=api_response.text
+    api_response_data= json.loads(api_response)
+    api_response_articles = api_response_data['value']
+    
+    parsed_articles = []
+    for article in api_response_articles:
+        article_info = {}
+        article_info['title'] = article['title']
+        article_info['link'] = article['url']
+        article_info['summary'] = article['description']
+        article_info['time'] = article['datePublished']
+        article_info['id'] = article['id']
+        article_images = article['image']
+        if article_images:
+            article_info['img'] = article_images['thumbnail']
+        else:
+            article_info['img'] = ""
+        article_provider_info = article['provider']
+        if article_provider_info:
+            article_info['source'] = article_provider_info['name']
+            source_img = article_provider_info['favIcon']
+            if source_img:
+                article_info['sourceIcon'] = source_img
+            else:
+                article_info['sourceIcon'] = ""
+        else:
+            article_info['source'] = ""
+            article_info['sourceIcon'] = ""
+        parsed_articles.append(article_info)
+
+    return jsonify({"data" : parsed_articles })
+    
+
+
+
+
+    
+
+    
+    
+
+
+
+
+    

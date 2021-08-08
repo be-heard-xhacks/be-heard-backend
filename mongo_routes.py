@@ -104,6 +104,27 @@ def storeInfographic(uid):
   
   return jsonify({'message': "Stored Infographic"})
 
+@app.route("/getUserInfographics", methods = ["GET"]) 
+@auth_required
+def getUserInfographics(uid):
+  objID = ObjectId(uid)
+  if not objID:
+    return make_response(jsonify({'message' : 'missing uid'}), 404)
+  
+  cursor = db['user-content'].find({'author': uid})
+  res = []
+  for info in cursor:
+    obj = {
+      'author': db.users.find_one({"_id" : objID})['firstName'],
+      'title': info['title'],
+      'sentences': info['sentences'],
+      'sponsored': False
+    }
+    res.append(obj)
+  print(res)
+
+  return jsonify({'infographics': res})
+
 @app.route("/getSpotlighted", methods = ["GET"])
 @auth_required
 def getSpotlighted(uid):
@@ -123,11 +144,3 @@ def getSpotlighted(uid):
   return jsonify({
     'message': spotlights
   })
-
-
-  
-
-
-  
-
-

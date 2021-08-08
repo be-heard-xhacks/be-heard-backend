@@ -94,15 +94,25 @@ def storeInfographic(uid):
   request_data = request.get_json()
   request_sentences = request_data['sentences']
   request_title = request_data['title']
+  request_sponsored = request_data['sponsored']
   db['user-content'].insert_one({
     'author': objID,
     'title': request_title,
     'sentences': request_sentences,
+    'sponsored': request_sponsored
   })
   
   return jsonify({'message': "Stored Infographic"})
 
-#@app.route("/getSpotlighted", methods = ["POST"])
+# @app.route("/getSpotlighted", methods = ["POST"])
+# @auth_required
+# def getSpotlighted(uid):
+#   objID = ObjectId(uid)
+#   if not objID:
+#     return make_response(jsonify({'message' : 'missing uid'}), 404)
+#   random_doc = db.
+
+  
 
 
   

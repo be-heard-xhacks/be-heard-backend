@@ -29,7 +29,7 @@ def getArticles(uid):
             }
         
         payload_headers = {
-            'x-rapidapi-key' : os.environ.get('X_RAPIDAPI_KEY_2'),
+            'x-rapidapi-key' : os.environ.get('X_RAPIDAPI_KEY_3'),
             'x-rapidapi-host' : os.environ.get('X_RAPIDAPI_HOST')
         }
         api_response = requests.get('https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/search/NewsSearchAPI',
@@ -85,7 +85,7 @@ def getTrending(uid):
     }
 
     payload_headers = {
-        'x-rapidapi-key' : os.environ.get('X_RAPIDAPI_KEY_2'),
+        'x-rapidapi-key' : os.environ.get('X_RAPIDAPI_KEY_3'),
         'x-rapidapi-host' : os.environ.get('X_RAPIDAPI_HOST')
     }
 

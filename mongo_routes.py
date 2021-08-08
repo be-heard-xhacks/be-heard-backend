@@ -1,7 +1,7 @@
 from bson.objectid import ObjectId
 from route_config import *
 from auth_routes import auth_required
-from flask import jsonify, make_response
+from flask import json, jsonify, make_response
 from werkzeug.security import generate_password_hash
 
 @app.route("/getUsers", methods = ["GET"])
@@ -104,13 +104,22 @@ def storeInfographic(uid):
   
   return jsonify({'message': "Stored Infographic"})
 
-# @app.route("/getSpotlighted", methods = ["POST"])
-# @auth_required
-# def getSpotlighted(uid):
-#   objID = ObjectId(uid)
-#   if not objID:
-#     return make_response(jsonify({'message' : 'missing uid'}), 404)
-#   random_doc = db.
+@app.route("/getSpotlighted", methods = ["GET"])
+@auth_required
+def getSpotlighted(uid):
+  objID = ObjectId(uid)
+  if not objID:
+    return make_response(jsonify({'message' : 'missing uid'}), 404)
+  random_doc = db['user-content'].find_one({'sponsored': True})
+  return jsonify({
+    'message': {
+      'author': db.users.find_one({"_id" : objID})['firstName'],
+      'title': random_doc['title'],
+      'sentences': random_doc['sentences'],
+      'sponsored': True
+    }
+  })
+
 
   
 

@@ -110,14 +110,18 @@ def getSpotlighted(uid):
   objID = ObjectId(uid)
   if not objID:
     return make_response(jsonify({'message' : 'missing uid'}), 404)
-  random_doc = db['user-content'].find_one({'sponsored': True})
-  return jsonify({
-    'message': {
-      'author': db.users.find_one({"_id" : objID})['firstName'],
-      'title': random_doc['title'],
-      'sentences': random_doc['sentences'],
+  spotlighted_docs = db['user-content'].find({'sponsored': True})
+  spotlights = []
+  for doc in spotlighted_docs:
+    author = db.users.find_one({"_id" : doc['author']})
+    spotlights.append({
+      'author': author['firstName'] + " " + author['lastName'],
+      'title': doc['title'],
+      'sentences': doc['sentences'],
       'sponsored': True
-    }
+    })
+  return jsonify({
+    'message': spotlights
   })
 
 

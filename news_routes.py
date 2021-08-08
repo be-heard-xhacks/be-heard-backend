@@ -124,16 +124,3 @@ def getTrending(uid):
 
     return jsonify({"data" : parsed_articles })
     
-
-
-
-
-    
-
-    
-    
-
-
-
-
-    

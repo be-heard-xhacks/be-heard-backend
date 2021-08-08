@@ -84,3 +84,27 @@ def updateUser(uid):
       db.users.update_one(query, newval)
     
     return jsonify({'updated user': str(db.users.find_one({"_id": objID}))})
+
+@app.route("/storeInfographic", methods = ["POST"])
+@auth_required
+def storeInfographic(uid):
+  objID = ObjectId(uid)
+  if not objID:
+    return make_response(jsonify({'message' : 'missing uid'}), 404)
+  request_data = request.get_json()
+  request_sentences = request_data['sentences']
+  request_title = request_data['title']
+  request_interest = request_data['interest']
+  db['user-content'].insert_one({
+    'author': objID,
+    'title': request_title,
+    'sentences': request_sentences,
+    'interest':  request_interest
+  })
+  
+  return jsonify({'message': "Stored Infographic"})
+
+
+  
+
+

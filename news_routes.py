@@ -24,7 +24,8 @@ def getArticles(uid):
             'pageSize': '5', 
             'autoCorrect': 'true',
             'fromPublishedDate': 'null',
-            'toPublishedDate': 'null'
+            'toPublishedDate': 'null',
+            'withThumbnails' : 'true'
             }
         
         payload_headers = {
@@ -49,7 +50,7 @@ def getArticles(uid):
             article_info['interest'] = request_query
             article_images = article['image']
             if article_images:
-                article_info['img'] = article_images['url']
+                article_info['img'] = article_images['thumbnail']
             else:
                 article_info['img'] = ""
             article_provider_info = article['provider']

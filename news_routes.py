@@ -12,10 +12,10 @@ def getArticles(uid):
     objID = ObjectId(uid)
     if not objID:
         return make_response(jsonify({'message' : 'missing uid'}), 404)
-    request_data = request.args
-    if request.is_json:
-        request_data = request.get_json()
-    request_queries = request_data.get('searchTerms')
+    # request_data = request.args
+    # if request.is_json:
+    #     request_data = request.get_json()
+    request_queries = db.users.find_one({"_id": objID})['interests']
     parsed_articles = []
     for request_query in request_queries:
         payload_params = {

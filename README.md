@@ -1,5 +1,7 @@
 # Be Heard: X Hacks 2021 Submission
 Educate, Enact, Empower. No voice left behind.
+
+[link to devpost](https://devpost.com/software/be-heard)
 ![logo](https://cdn.discordapp.com/attachments/863951358284791808/873909093809672222/Presentation.png)
 ## Inspiration
 To say 2020 was an eventful year would be an understatement. More than ever, social activism is at the forefront of global headlines and both social impact investing and activism are rising at astronomical rates. Because of all of this, we have created Be Heard.

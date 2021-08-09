@@ -9,13 +9,13 @@ Harnessing natural language processing and data powered by global news syndicate
 Introducing Be Heard. A one-stop destination for issues around the world, Be Heard is the ultimate tool to educate, emphasize, and enact on critical current events. 
 
 Focused on empowerment, our app offers two pathways for users to use our platform. 
-###Educate
+### Educate
 On the Educate screen, we use the Contextual Web Search API which harnesses webscraped data from the world’s largest news providers to generate a curated news feed based on a user’s interests, including a reading calendar, spotlight section, and recent headlines section.
 ![beHeard](https://cdn.discordapp.com/attachments/863951358284791808/873909081532928040/promo_material.png)
 * First, we have a reading calendar which is intended to hold different articles, podcasts, books, and more for each day of the month.
 * Next, we have the spotlighted section, with posts created by other users that align with your interests. This is what makes our app truly special. It’s not just a news app, it’s a platform for people to have their voices heard.
 * Lastly, we have a collection of news related to the users interests as well as recent headlines.
-###Enact
+### Enact
 On the enact pathway, users have a plethora of ways to use their newfound knowledge to make a difference in the world. Here are our list of features: 
 * Create Spotlight: Users can pay to create and post their own articles to spread awareness on a topic they are passionate about.
 ![enact2](https://cdn.discordapp.com/attachments/863951358284791808/873909084418621490/promo_material2.png)
